@@ -5,13 +5,12 @@
         <div class="card">
           <div class="card-header">
             <h4>Firebase Functions Dashboard</h4>
-            <p class="mb-0 text-muted">EFOLIO Task 9 - Firebase Functions Integration</p>
           </div>
           <div class="card-body">
             
-            <!-- Task 9.1: Book Count -->
+            <!-- Book Count Function -->
             <div class="mb-4">
-              <h5>Task 9.1: Book Count Function</h5>
+              <h5>Book Count Function</h5>
               <div class="row">
                 <div class="col-md-8">
                   <div class="alert alert-info">
@@ -46,9 +45,9 @@
               </div>
             </div>
 
-            <!-- Task 9.2: Book Statistics -->
+            <!-- Book Statistics Function -->
             <div class="mb-4">
-              <h5>Task 9.2: Book Statistics Function</h5>
+              <h5>Book Statistics Function</h5>
               <div class="row">
                 <div class="col-md-8">
                   <div class="alert alert-info">
@@ -97,83 +96,6 @@
               </div>
             </div>
 
-            <!-- Search Function -->
-            <div class="mb-4">
-              <h5>Bonus: Search Books Function</h5>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="input-group">
-                    <input 
-                      type="text" 
-                      class="form-control" 
-                      v-model="searchTerm" 
-                      placeholder="Enter book title to search"
-                    >
-                    <button 
-                      class="btn btn-outline-primary" 
-                      @click="searchBooks" 
-                      :disabled="loading || !searchTerm"
-                    >
-                      Search
-                    </button>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="alert alert-info">
-                    <strong>Function:</strong> searchBooks<br>
-                    <strong>Purpose:</strong> Search books by title<br>
-                    <strong>Type:</strong> HTTPS Callable Function
-                  </div>
-                </div>
-              </div>
-              
-              <div v-if="searchResult" class="mt-3">
-                <div class="alert" :class="searchResult.success ? 'alert-success' : 'alert-danger'">
-                  <h6>{{ searchResult.success ? 'Search Results!' : 'Error!' }}</h6>
-                  <div v-if="searchResult.success">
-                    <p><strong>Found:</strong> {{ searchResult.count }} books</p>
-                    <div v-if="searchResult.results && searchResult.results.length > 0" class="table-responsive">
-                      <table class="table table-sm">
-                        <thead>
-                          <tr>
-                            <th>Title</th>
-                            <th>Author</th>
-                            <th>Category</th>
-                            <th>Price</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr v-for="book in searchResult.results" :key="book.id">
-                            <td>{{ book.title }}</td>
-                            <td>{{ book.author }}</td>
-                            <td>{{ book.category }}</td>
-                            <td>${{ book.price || 'N/A' }}</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                  <p v-else>
-                    <strong>Error:</strong> {{ searchResult.error }}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Function Information -->
-            <div class="mt-4">
-              <h5>Firebase Functions Information</h5>
-              <div class="alert alert-warning">
-                <h6>Important Notes:</h6>
-                <ul class="mb-0">
-                  <li><strong>Task 9.1:</strong> Use the "Get Book Count" button to call the getBookCount function</li>
-                  <li><strong>Task 9.2:</strong> The capitalizeBookData function runs automatically when you add a new book</li>
-                  <li><strong>Deployment:</strong> Functions must be deployed to Firebase to work</li>
-                  <li><strong>Testing:</strong> Add a book first, then check if the data is capitalized in Firestore</li>
-                </ul>
-              </div>
-            </div>
-
             <!-- Loading State -->
             <div v-if="loading" class="text-center mt-3">
               <div class="spinner-border" role="status">
@@ -190,16 +112,14 @@
 
 <script setup>
 import { ref } from 'vue'
-import { getBookCount as getBookCountService, getBookStatistics as getBookStatisticsService, searchBooks as searchBooksService } from '../firebase/functionsService.js'
+import { getBookCount as getBookCountService, getBookStatistics as getBookStatisticsService } from '../firebase/functionsService.js'
 
 // Reactive data
 const loading = ref(false)
 const bookCountResult = ref(null)
 const statisticsResult = ref(null)
-const searchResult = ref(null)
-const searchTerm = ref('')
 
-// Get book count (Task 9.1)
+// Get book count
 const getBookCount = async () => {
   loading.value = true
   bookCountResult.value = null
@@ -227,26 +147,6 @@ const getBookStatistics = async () => {
     statisticsResult.value = result
   } catch (error) {
     statisticsResult.value = {
-      success: false,
-      error: error.message
-    }
-  } finally {
-    loading.value = false
-  }
-}
-
-// Search books
-const searchBooks = async () => {
-  if (!searchTerm.value.trim()) return
-  
-  loading.value = true
-  searchResult.value = null
-  
-  try {
-    const result = await searchBooksService(searchTerm.value)
-    searchResult.value = result
-  } catch (error) {
-    searchResult.value = {
       success: false,
       error: error.message
     }

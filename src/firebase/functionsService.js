@@ -7,10 +7,14 @@ const functions = getFunctions(app)
 // Connect to Functions emulator in development
 if (import.meta.env.DEV) {
   try {
-    connectFunctionsEmulator(functions, '127.0.0.1', 5001)
-    console.log('Connected to Firebase Functions emulator')
+    // Check if already connected to avoid multiple connections
+    if (!functions._delegate._url) {
+      connectFunctionsEmulator(functions, '127.0.0.1', 5001)
+      console.log('Connected to Firebase Functions emulator on port 5001')
+    }
   } catch (error) {
-    console.log('Functions emulator not running, using production config')
+    console.log('Functions emulator connection error:', error.message)
+    console.log('Using production config')
   }
 }
 
