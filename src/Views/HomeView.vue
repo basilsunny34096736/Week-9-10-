@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { dataStore } from '../store/dataStore.js'
 
 defineOptions({ name: 'LibraryFormW5' })
 
@@ -22,8 +23,8 @@ const formErrors = ref({
   reason: null
 })
 
-// submitted entries
-const records = ref([])
+// Use shared store for records
+const records = computed(() => dataStore.getRecords())
 
 // positive note if "friend" is in reason
 const reasonNote = computed(() =>
@@ -76,13 +77,20 @@ const handleSubmit = () => {
     !formErrors.value.reason
   ) {
     const hiddenPassword = '•'.repeat(Math.min(state.value.password.length, 12))
-    records.value.push({
+    const newRecord = {
       username: state.value.username,
       password: hiddenPassword,
       resident: state.value.australianResident,
       gender: state.value.gender,
-      reason: state.value.reason
-    })
+      reason: state.value.reason,
+      suburb: state.value.suburb
+    }
+    
+    // Add to shared store
+    dataStore.addRecord(newRecord)
+    
+    // Reset form after successful submission
+    resetForm()
   }
 }
 

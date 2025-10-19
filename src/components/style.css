@@ -16,21 +16,12 @@ h1 {
 #password:focus,
 #isAustralian:focus,
 #reason:focus {
-<<<<<<< HEAD
   border-color: #ff6347; /* More obvious border color change (Tomato) */
   background-color: #ffebe8; /* Light background color change */
-=======
-  border-color: #ff6347;
-  background-color: #ffebe8;
->>>>>>> 0a2999c (first commit)
 }
 
 /* Attribute selectors */
 select[id='gender'] {
-<<<<<<< HEAD
   background-color: #d3d3d3; /* Default background color set to gray */
-=======
-  background-color: #d3d3d3;
->>>>>>> 0a2999c (first commit)
 }
  
